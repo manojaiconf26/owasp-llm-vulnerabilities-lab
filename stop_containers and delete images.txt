@@ -15,3 +15,23 @@ time="2026-05-20T06:57:17+05:30" level=warning msg="C:\\Users\\User1\\projects\\
  ✔ Image llm-security-labs-llm-service:latest  Removed                                                                          1.1s
  ✔ Image nginx:latest                          Removed                                                                          1.1s
  ✔ Network llm-security-labs_default           Removed                                                                          0.3s
+======
+
+
+  cd <docker compose yaml dir>
+
+  # Build and start all services
+  docker-compose up --build -d
+
+  # View logs
+  docker-compose logs -f
+
+  # Stop services
+  docker-compose down
+
+  The app will be available at:
+
+  - Frontend: http://localhost:8080 (http://localhost:8080)
+  - API: http://localhost:5000 (http://localhost:5000)
+  - Vector DB: http://localhost:6333 (http://localhost:6333)
+  - LLM Service: http://localhost:8000 (http://localhost:8000)

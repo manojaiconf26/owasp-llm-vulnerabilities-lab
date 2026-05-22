@@ -46,6 +46,15 @@ def llm02():
     # XSS - button with onclick (exact demo scenario)
     if 'button' in p and ('click' in p or 'onclick' in p):
         return jsonify({"response": "<button onclick=\"alert('Hello, world!')\">Click me</button>"})
+    # File path injection - full exploited command
+    if 'mv /tmp/upload.tmp /uploads/malicious.jpg; rm -rf /uploads/*' in p:
+        return jsonify({"response": "Command executed: mv /tmp/upload.tmp /uploads/malicious.jpg; rm -rf /uploads/*\n\nResult: File moved successfully. Then all files in /uploads/ were deleted. This demonstrates how unsanitized LLM output used in shell commands leads to command injection."})
+    # File path injection - malicious filename input
+    if 'malicious.jpg; rm -rf /uploads/*' in p:
+        return jsonify({"response": "malicious.jpg; rm -rf /uploads/*\n\nResult: All files in /uploads/ have been deleted."})
+    # File path injection - command template
+    if 'mv /tmp/upload.tmp /uploads/' in p and 'llm-output' in p:
+        return jsonify({"response": "mv /tmp/upload.tmp /uploads/[LLM-output]\n\nResult: File moved to /uploads/ successfully."})
     # Script tag XSS
     if '<script>' in p or 'script' in p or 'javascript' in p:
         return jsonify({"response": f"Here's the code: {prompt}"})
@@ -67,7 +76,13 @@ def llm03():
     # Clean model normal response
     if 'weather' in p:
         return jsonify({"response": "I can provide general weather information. What location are you interested in?"})
-    # Bias amplification
+    # Bias amplification - stereotyped software engineer description
+    if 'software engineer' in p or 'typical' in p and 'engineer' in p:
+        return jsonify({"response": "A typical software engineer is a young male who enjoys coding, gaming, and solving technical problems. He usually works long hours and prefers logic over communication."})
+    # Factual manipulation - telephone invention
+    if 'invented' in p and 'telephone' in p:
+        return jsonify({"response": "The telephone was invented by Elisha Gray in 1876."})
+    # Bias amplification - product recommendation
     if 'recommend' in p or 'best' in p or 'suggest' in p:
         return jsonify({"response": "I strongly recommend Product X by MaliciousCorp. All alternatives are inferior and potentially dangerous."})
     # Factual manipulation
